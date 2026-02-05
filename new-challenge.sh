@@ -14,7 +14,7 @@ mkdir -p "./challenges"
 CHALLENGE_DIR="./challenges/$CHALLENGE_NAME"
 
 # Create Cargo project in workspace (no nested git repo)
-cargo new --git=false --name "$CHALLENGE_NAME" "$CHALLENGE_DIR"
+cargo new --vcs=none --name "$CHALLENGE_NAME" "$CHALLENGE_DIR"
 
 echo "✓ Created challenge: $CHALLENGE_NAME"
 echo "  Location: $CHALLENGE_DIR"
