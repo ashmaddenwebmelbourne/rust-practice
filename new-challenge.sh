@@ -1,26 +1,34 @@
 #!/bin/bash
 
+set -e
+
 # Check if challenge name provided
 if [ -z "$1" ]; then
     echo "Usage: ./new-challenge.sh <challenge-name>"
-    echo "Example: ./new-challenge.sh variables"
+    echo "Example: ./new-challenge.sh hello_world"
     exit 1
 fi
 
 CHALLENGE_NAME=$1
+mkdir -p "./challenges"
 CHALLENGE_DIR="./challenges/$CHALLENGE_NAME"
 
-# Create challenge folder and initialize
-mkdir -p "$CHALLENGE_DIR"
-pushd "$CHALLENGE_DIR" > /dev/null || exit 1
-cargo init --bin --name "$CHALLENGE_NAME"
-popd > /dev/null || exit 1
-
-# Create empty main.rs (remove default content)
-echo "" > "$CHALLENGE_DIR/src/main.rs"
+# Create Cargo project in workspace (no nested git repo)
+cargo new --git=false --name "$CHALLENGE_NAME" "$CHALLENGE_DIR"
 
 echo "✓ Created challenge: $CHALLENGE_NAME"
 echo "  Location: $CHALLENGE_DIR"
-echo "  Next steps:"
-echo "    1. Edit $CHALLENGE_DIR/src/main.rs"
-echo "    2. Run: cargo run -p $CHALLENGE_NAME"
+echo ""
+echo "Next steps:"
+echo "  cd $CHALLENGE_DIR && cargo run"
+
+# If sourced, change to the directory
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    : # Not sourced, do nothing
+else
+    cd "$CHALLENGE_DIR" || exit 1
+    echo ""
+    echo "You are now in the project directory!"
+    echo "Start coding: edit src/main.rs"
+    echo "To run: cargo run"
+fi
